@@ -12,8 +12,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,7 +25,6 @@ import com.example.notist.R;
 import com.example.notist.adapters.NotesAdapter;
 import com.example.notist.listeners.NotesListener;
 import com.example.notist.model.Note;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
     private NotesAdapter adapter;
     private List<Note> noteList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    ImageView imgAddNoteBtn;
+    private ImageView imgAddNoteBtn, clearSearch;
+    private EditText searchNote;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,58 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
         });
 
         getNotes();
+
+        searchNote = findViewById(R.id.searchNote);
+        clearSearch = findViewById(R.id.clearSearch);
+        searchNote.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count > 0){
+                    clearSearch.setVisibility(View.VISIBLE);
+                    clearSearch.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            searchNote.setText("");
+                        }
+                    });
+                }
+                adapter.cancelTimer();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().isEmpty()){
+                    clearSearch.setVisibility(View.VISIBLE);
+                    clearSearch.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            searchNote.setText("");
+                        }
+                    });
+                }
+                if(searchNote.getText().toString().isEmpty())
+                    clearSearch.setVisibility(View.GONE);
+
+                if(noteList.size() != 0){
+                    adapter.searchNotes(s.toString());
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Nothing to search here", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //TODO: implement clear storage functionality.
+//        if(noteList.isEmpty()){
+//            clearStorage();
+//        }
+    }
+
+    private void clearStorage() {
     }
 
     private void getNotes(){

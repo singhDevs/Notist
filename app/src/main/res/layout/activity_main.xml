@@ -44,7 +44,9 @@
             android:contentDescription="@string/app_name"/>
 
         <EditText
-            android:layout_width="match_parent"
+            android:id="@+id/searchNote"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/_35sdp"
             android:layout_marginStart="@dimen/_12sdp"
             android:background="@null"
@@ -56,7 +58,15 @@
             android:inputType="text"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorTextHint"
-            android:textSize="@dimen/_13ssp" />
+            android:textSize="@dimen/_13ssp"/>
+
+        <ImageView
+            android:id="@+id/clearSearch"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:src="@drawable/ic_cancel"
+            android:contentDescription="@string/app_name"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
