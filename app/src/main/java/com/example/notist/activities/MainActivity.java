@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -40,12 +41,14 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
     int noteClickedPosition = -1;
     private NotesAdapter adapter;
     private List<Note> noteList;
+    private SwipeRefreshLayout swipeRefreshLayout;
     ImageView imgAddNoteBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         imgAddNoteBtn = findViewById(R.id.imgAddNoteBtn);
         imgAddNoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +67,13 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
         adapter = new NotesAdapter(noteList, this, this);
         recyclerView.setAdapter(adapter);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getNotes();
+            }
+        });
+
         getNotes();
     }
 
@@ -77,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
+                swipeRefreshLayout.setRefreshing(false);
             }
         }
         new GetNotesTask().execute();
