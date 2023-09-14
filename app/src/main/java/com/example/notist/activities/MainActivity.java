@@ -112,15 +112,10 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
                 Log.d("lolz", "noteList.size(): " + noteList.size());
                 Log.d("lolz", "notes.size(): " + notes.size());
 
-                if(noteList.size() == 0){
-                    noteList.addAll(notes);
-                    Collections.reverse(noteList);
-                    adapter.notifyDataSetChanged();
-                }
-                else{
-                    noteList.add(0, notes.get(notes.size() - 1));
-                    adapter.notifyItemInserted(0);
-                }
+                noteList.clear();
+                noteList.addAll(notes);
+                Collections.reverse(noteList);
+                adapter.notifyDataSetChanged();
                 recyclerView.smoothScrollToPosition(0);
             }
 
@@ -143,7 +138,17 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
                 public void run() {
                     getNotes();
                 } //TODO: create fetchOneNote
-            },2000);
+            },500);
+            Log.d("imp", "updated list!");
+        }
+        if(requestCode == REQUEST_CODE_UPDATE_NOTE && resultCode == RESULT_OK){
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getNotes();
+                } //TODO: create fetchOneNote
+            },500);
             Log.d("imp", "updated list!");
         }
     }

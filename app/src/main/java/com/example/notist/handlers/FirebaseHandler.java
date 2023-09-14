@@ -15,6 +15,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseHandler {
     public static Task<Uri> uploadImage(Uri filePath, Context context){
@@ -65,6 +67,31 @@ public class FirebaseHandler {
             }
             else{
                 Toast.makeText(context, "Note successfully deleted", Toast.LENGTH_SHORT).show();
+            }
+            return Tasks.forResult(null);
+        });
+    }
+
+    public static Task<Void> updateNote(Note note, Context context){
+        Log.d("imp", "entered updateNote Task");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("notes");
+        DatabaseReference nodeToBeUpdated = databaseReference.child(note.getId());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("color", note.getColor());
+        updates.put("date", note.getDate());
+        updates.put("imgPath", note.getImgPath());
+        updates.put("noteText", note.getNoteText());
+        updates.put("subtitle", note.getSubtitle());
+        updates.put("title", note.getTitle());
+        updates.put("webLink", note.getWebLink());
+
+        return nodeToBeUpdated.updateChildren(updates).continueWithTask(task -> {
+            if(!task.isSuccessful()){
+                Toast.makeText(context, "Error updating the note", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(context, "Note updated successfully", Toast.LENGTH_SHORT).show();
             }
             return Tasks.forResult(null);
         });

@@ -118,17 +118,28 @@ public class NewNoteActivity extends AppCompatActivity {
             public void onClick(View view) {
                 textViewWebURL.setText(null);
                 layoutWebURL.setVisibility(View.GONE);
-                webLink = "";
+                if(availableNote != null){
+                    availableNote.setWebLink("");
+                }
+                else{
+                    webLink = "";
+                }
             }
         });
 
         findViewById(R.id.imgDeleteImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imgPath = "";
                 imageNote.setImageBitmap(null);
                 imageNote.setVisibility(View.GONE);
                 findViewById(R.id.imgDeleteImg).setVisibility(View.GONE);
+
+                if(availableNote != null){
+                    availableNote.setImgPath("");
+                }
+                else{
+                    imgPath = "";
+                }
             }
         });
 
@@ -171,44 +182,68 @@ public class NewNoteActivity extends AppCompatActivity {
     }
     public void saveNote(){
         Log.d("imp", "entered saveNote()");
-        if(filePath != null) {
-            FirebaseHandler.uploadImage(filePath, getApplicationContext()).addOnCompleteListener(new OnCompleteListener<Uri>() {
+        if(availableNote != null){
+            availableNote.setTitle(noteTitle.getText().toString());
+            availableNote.setSubtitle(noteSubtitle.getText().toString());
+            availableNote.setDate(getCurrentDate());
+            availableNote.setNoteText(noteTxt.getText().toString());
+            availableNote.setColor(selectedNoteColor);
+            FirebaseHandler.updateNote(availableNote, this).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult() != null) {
-                            imgPath = task.getResult().toString();
-                            Log.d("imp", "got the img URL");
+                public void onComplete(@NonNull Task<Void> task) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            setResult(RESULT_OK);
+                            finish();
                         }
-                        Log.d("imp", "back to saveNote uploadImg...");
-
-                        final Note note = new Note();
-                        note.setTitle(noteTitle.getText().toString());
-                        note.setSubtitle(noteSubtitle.getText().toString());
-                        note.setDate(getCurrentDate());
-                        note.setNoteText(noteTxt.getText().toString());
-                        note.setColor(selectedNoteColor);
-                        note.setWebLink(webLink);
-                        note.setImgPath(imgPath);
-                        uploadData(note);
-                    } else {
-                        Toast.makeText(NewNoteActivity.this, "Error uploading image", Toast.LENGTH_SHORT).show();
-                    }
+                    }, 500);
                 }
             });
         }
         else{
-            Log.d("imp", "going without filePath");
-            final Note note = new Note();
-            note.setTitle(noteTitle.getText().toString());
-            note.setSubtitle(noteSubtitle.getText().toString());
-            note.setDate(getCurrentDate());
-            note.setNoteText(noteTxt.getText().toString());
-            note.setColor(selectedNoteColor);
-            note.setWebLink(webLink);
-            note.setImgPath(imgPath);
-            uploadData(note);
+            if(filePath != null) {
+                FirebaseHandler.uploadImage(filePath, getApplicationContext()).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null) {
+                                imgPath = task.getResult().toString();
+                                Log.d("imp", "got the img URL");
+                            }
+                            Log.d("imp", "back to saveNote uploadImg...");
+
+                            final Note note = new Note();
+                            note.setTitle(noteTitle.getText().toString());
+                            note.setSubtitle(noteSubtitle.getText().toString());
+                            note.setDate(getCurrentDate());
+                            note.setNoteText(noteTxt.getText().toString());
+                            note.setColor(selectedNoteColor);
+                            note.setWebLink(webLink);
+                            note.setImgPath(imgPath);
+                            uploadData(note);
+                        } else {
+                            Toast.makeText(NewNoteActivity.this, "Error uploading image", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+            else{
+                Log.d("imp", "going without filePath");
+                final Note note = new Note();
+                note.setTitle(noteTitle.getText().toString());
+                note.setSubtitle(noteSubtitle.getText().toString());
+                note.setDate(getCurrentDate());
+                note.setNoteText(noteTxt.getText().toString());
+                note.setColor(selectedNoteColor);
+                note.setWebLink(webLink);
+                note.setImgPath(imgPath);
+                uploadData(note);
+            }
         }
+
     }
 
     private void uploadData(Note note) {
@@ -396,9 +431,10 @@ public class NewNoteActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        setResult(RESULT_OK);
                         finish();
                     }
-                }, 2000);
+                }, 1000);
             }
         });
     }
@@ -464,7 +500,12 @@ public class NewNoteActivity extends AppCompatActivity {
                 if(selectedImageUri != null){
                     imageNote.setImageURI(selectedImageUri);
                     imageNote.setVisibility(View.VISIBLE);
-                    imgPath = String.valueOf(selectedImageUri);
+                    if(availableNote != null){
+                        availableNote.setImgPath(String.valueOf(selectedImageUri));
+                    }
+                    else {
+                        imgPath = String.valueOf(selectedImageUri);
+                    }
                 }
                 else{
                     Log.e("error", "selectedImageUri == null");
@@ -527,7 +568,13 @@ public class NewNoteActivity extends AppCompatActivity {
                         Log.d("imp", "entered textADD ELSE");
                         textViewWebURL.setText(inputURL.getText().toString());
                         layoutWebURL.setVisibility(View.VISIBLE);
-                        webLink = inputURL.getText().toString();
+
+                        if(availableNote != null){
+                            availableNote.setWebLink(inputURL.getText().toString());
+                        }
+                        else{
+                            webLink = inputURL.getText().toString();
+                        }
                         dialogWebURL.dismiss();
                     }
                 }
