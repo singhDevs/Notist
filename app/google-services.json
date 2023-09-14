@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "535328786602",
+    "firebase_url": "https://notist-57600-default-rtdb.firebaseio.com",
+    "project_id": "notist-57600",
+    "storage_bucket": "notist-57600.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535328786602:android:bd4bb53b361ae4919a28d3",
+        "android_client_info": {
+          "package_name": "com.example.notist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535328786602-3sn9o3rnfqhtmen7931hpdg6qhkc3hrt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA51_-EILWJyd-3mz-qHLs1qwgNW5Tc83o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535328786602-3sn9o3rnfqhtmen7931hpdg6qhkc3hrt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Notist</string>
+    <string name="notes">Notes</string>
+    <string name="search_notes">Search Notes</string>
+    <string name="note_subtitle">Note Subtitle</string>
+    <string name="note_title">Note Title</string>
+    <string name="type_your_note">Type your Note…</string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="pick_color">Pick Color</string>
+    <string name="add_image">Add Image</string>
+    <string name="add_url">Add URL</string>
+    <string name="add">ADD</string>
+    <string name="cancel">CANCEL</string>
+    <string name="delete_note">Delete Note</string>
+</resources>
