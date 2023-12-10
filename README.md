@@ -6,4 +6,3 @@ Notist is a feature-rich note-taking app for Android, designed to make organizin
 * **Cloud Storage with Firebase:** Your notes, including text and images, are securely stored in the cloud using Firebase Storage.
 * **Create, Edit, View, Delete:** Perform all the essential note-taking actions with ease.
 * **Text and Image Support:** Notist allows you to store both text and images within your notes, making your memories more vivid.
-* 
