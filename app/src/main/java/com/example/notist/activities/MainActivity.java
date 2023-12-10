@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.example.notist.R;
 import com.example.notist.adapters.NotesAdapter;
 import com.example.notist.listeners.NotesListener;
 import com.example.notist.model.Note;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,10 +47,14 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView imgAddNoteBtn, clearSearch;
     private EditText searchNote;
+    private Button logout;
+    private FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         imgAddNoteBtn = findViewById(R.id.imgAddNoteBtn);
@@ -122,6 +128,15 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
             }
         });
 
+        logout = findViewById(R.id.logoutBtn);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseAuth.signOut();
+                Intent intent = new Intent(MainActivity.this, Login.class);
+                startActivity(intent);
+            }
+        });
         //TODO: implement clear storage functionality.
 //        if(noteList.isEmpty()){
 //            clearStorage();
@@ -148,8 +163,10 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Scro
     }
 
     private List<Note> fetchAllNotes() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference notesNode = databaseReference.child("notes");
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+//        DatabaseReference notesNode = databaseReference.child("notes");
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference notesNode = FirebaseDatabase.getInstance().getReference().child("notes").child(userUid);
         List<Note> notes = new ArrayList<>();
 
         notesNode.addListenerForSingleValueEvent(new ValueEventListener() {

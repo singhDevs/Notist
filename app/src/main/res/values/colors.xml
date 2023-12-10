@@ -18,4 +18,5 @@
     <color name="colorDelete">#FF4842</color>
     <color name="colorSearchBackground">#333333</color>
     <color name="colorNoteSubtitleText">#FAFAFA</color>
+    <color name="colorBlack">#000000</color>
 </resources>

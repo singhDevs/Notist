@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -182,6 +183,7 @@ public class NewNoteActivity extends AppCompatActivity {
     }
     public void saveNote(){
         Log.d("imp", "entered saveNote()");
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if(availableNote != null){
             availableNote.setTitle(noteTitle.getText().toString());
             availableNote.setSubtitle(noteSubtitle.getText().toString());

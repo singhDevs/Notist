@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.example.notist.model.Note;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -36,9 +37,11 @@ public class FirebaseHandler {
 
     public static Task<Void> uploadData(Note note, Context context  ){
         Log.d("color", "entered uploadData()");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference user = databaseReference.child("notes");
-        DatabaseReference newUser = user.push();
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+//        DatabaseReference user = databaseReference.child("notes");
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userNotesRef = FirebaseDatabase.getInstance().getReference().child("notes").child(userUid);
+        DatabaseReference newUser = userNotesRef.push();
         String newUserId = newUser.getKey();
         note.setId(newUserId);
 
@@ -48,7 +51,7 @@ public class FirebaseHandler {
                 throw task.getException();
             }
             else{
-                Toast.makeText(context, "upload data task successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Note saved", Toast.LENGTH_SHORT).show();
                 Log.d("color", "upload data task successful! Now returning...");
             }
             return Tasks.forResult(null);
@@ -57,7 +60,9 @@ public class FirebaseHandler {
 
     public static Task<Void> deleteNote(String noteID, Context context){
         Log.d("imp", "entered deleteNote Task");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("notes");
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("notes");
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("notes").child(userUid);
         DatabaseReference noteToBeDeleted = databaseReference.child(noteID);
 
         return noteToBeDeleted.removeValue().continueWithTask(task -> {
@@ -74,8 +79,11 @@ public class FirebaseHandler {
 
     public static Task<Void> updateNote(Note note, Context context){
         Log.d("imp", "entered updateNote Task");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("notes");
-        DatabaseReference nodeToBeUpdated = databaseReference.child(note.getId());
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("notes");
+//        DatabaseReference nodeToBeUpdated = databaseReference.child(note.getId());
+
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference nodeToBeUpdated = FirebaseDatabase.getInstance().getReference().child("notes").child(userUid);
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("color", note.getColor());

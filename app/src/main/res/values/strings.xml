@@ -12,4 +12,11 @@
     <string name="add">ADD</string>
     <string name="cancel">CANCEL</string>
     <string name="delete_note">Delete Note</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="not_registered_yet_register_now">Not registered yet? Register Now</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account">Already have an account? Login</string>
+    <string name="logout">Logout</string>
 </resources>

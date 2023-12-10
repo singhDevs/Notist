@@ -99,7 +99,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
         void setNote(Note note){
             textTitle.setText(note.getTitle());
-            if(note.getSubtitle().trim().isEmpty()){
+            if(note.getSubtitle() != null && note.getSubtitle().trim().isEmpty()){
                 textSubtitle.setVisibility(View.GONE);
             }
             else {
@@ -108,7 +108,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
             textDate.setText(note.getDate());
 
             GradientDrawable gradientDrawable = (GradientDrawable) layout_recycler.getBackground();
-            if(!note.getColor().isEmpty()){
+            if(note.getColor() != null && !note.getColor().isEmpty()){
                 if(note.getColor().equals("colorDefaultNoteColor")){
                     gradientDrawable.setColor(Color.parseColor("#333333"));
                     Log.d("color", "Note Color: " + note.getColor());
@@ -146,36 +146,69 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         }
     }
 
-    public void searchNotes(final String keyword){
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if(keyword.trim().isEmpty()){
-                    notes = allNotes;
-                }
-                else{
-                    ArrayList<Note> searchResult = new ArrayList<>();
-                    for(Note note : allNotes){
-                        if(note.getTitle().toLowerCase().contains(keyword.toLowerCase())
-                                || note.getSubtitle().toLowerCase().contains(keyword.toLowerCase())
-                                || note.getNoteText().toLowerCase().contains(keyword.toLowerCase())){
-                            searchResult.add(note);
-                        }
-                    }
-                    notes = searchResult;
-                }
+//    public void searchNotes(final String keyword){
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if(keyword.trim().isEmpty()){
+//                    notes = allNotes;
+//                }
+//                else{
+//                    ArrayList<Note> searchResult = new ArrayList<>();
+//                    for(Note note : allNotes){
+//                        if(note.getTitle() != null && note.getSubtitle() != null && note.getNoteText() != null && note.getTitle().toLowerCase().contains(keyword.toLowerCase())
+//                                || note.getSubtitle().toLowerCase().contains(keyword.toLowerCase())
+//                                || note.getNoteText().toLowerCase().contains(keyword.toLowerCase())){
+//                            searchResult.add(note);
+//                        }
+//                    }
+//                    notes = searchResult;
+//                }
+//
+//                new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//        }, 500);
+//
+//    }
+public void searchNotes(final String keyword) {
+    timer = new Timer();
+    timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+            if (keyword.trim().isEmpty()) {
+                notes = allNotes;
+            } else {
+                ArrayList<Note> searchResult = new ArrayList<>();
+                for (Note note : allNotes) {
+                    // Perform null checks before calling toLowerCase()
+                    String title = note.getTitle() != null ? note.getTitle().toLowerCase() : "";
+                    String subtitle = note.getSubtitle() != null ? note.getSubtitle().toLowerCase() : "";
+                    String noteText = note.getNoteText() != null ? note.getNoteText().toLowerCase() : "";
 
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyDataSetChanged();
+                    if (title.contains(keyword.toLowerCase())
+                            || subtitle.contains(keyword.toLowerCase())
+                            || noteText.contains(keyword.toLowerCase())) {
+                        searchResult.add(note);
                     }
-                });
+                }
+                notes = searchResult;
             }
-        }, 500);
 
-    }
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            });
+        }
+    }, 500);
+}
 
     public void cancelTimer(){
         if(timer != null)
