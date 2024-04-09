@@ -21,8 +21,17 @@ jobs:
       - name: Ensure execute permissions for gradlew
         run: chmod +x gradlew
 
+      - name: Clean Gradle Cache
+        run: rm -rf $HOME/.gradle
+
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Debug Gradle Wrapper
+        run: cat gradle/wrapper/gradle-wrapper.properties
+
+      - name: Gradle Version Info
+        run: ./gradlew --version
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.1
