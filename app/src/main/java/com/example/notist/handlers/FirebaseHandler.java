@@ -83,7 +83,7 @@ public class FirebaseHandler {
 //        DatabaseReference nodeToBeUpdated = databaseReference.child(note.getId());
 
         String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference nodeToBeUpdated = FirebaseDatabase.getInstance().getReference().child("notes").child(userUid);
+        DatabaseReference nodeToBeUpdated = FirebaseDatabase.getInstance().getReference().child("notes").child(userUid).child(note.getId());
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("color", note.getColor());
