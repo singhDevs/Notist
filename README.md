@@ -7,6 +7,9 @@ Notist is a feature-rich note-taking app for Android, designed to make organizin
 * **Create, Edit, View, Delete:** Perform all the essential note-taking actions with ease.
 * **Text and Image Support:** Notist allows you to store both text and images within your notes, making your memories more vivid.
 
+# Demo Video
+[![Demo Video](https://github.com/singhDevs/Notist/assets/139853742/abe4476b-60f0-451d-8a15-d44114a6fc70)](https://www.youtube.com/watch?v=Dj3zXpzcCfo)
+
 # Screenshots
 ## All Notes
 ![All Notes](https://github.com/singhDevs/Notist/assets/139853742/cba358de-d724-4bbc-85b8-9dfc0c01eeef)
